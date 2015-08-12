@@ -37,7 +37,7 @@
 
       function getDefaultProps() {
         return {
-         data: window.data,
+          data: window.data,
           isExternal: true,
           images: {
             traubyReading: '../images/trauby-reading.png',
@@ -56,6 +56,12 @@
           },
           onChange: function(data) {
             console.log('onChange', data)
+          },
+          onBlur: function () {
+            console.log('onBlur')
+          },
+          onAbort: function() {
+            console.log('onAbort')
           }
         }
       }
