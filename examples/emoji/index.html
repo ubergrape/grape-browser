@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
-    <title>Basic Example</title>
+    <title>Emoji Example</title>
     <link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.css"/>
     <style>
       * {
@@ -16,25 +16,31 @@
     </style>
   </head>
   <body>
-    <script src="../../node_modules/webcomponents.js/webcomponents-lite.js"></script>
+    <script src="../../node_modules/es5-shim/es5-shim.js"></script>
+    <script src="../../node_modules/es6-shim/es6-shim.js"></script>
+    <script src="../../node_modules/custom-event-polyfill/custom-event-polyfill.js"></script>
+    <script src="../../node_modules/document-register-element/build/document-register-element.max.js"></script>
     <script src="../../node_modules/react/dist/react.js"></script>
     <script src="../../node_modules/reactive-elements/dist/reactive-elements.js"></script>
-    <script src="../../dist/grape-browser.js"></script>
+    <script src="/build/grape-browser.js"></script>
 
+    <button onclick="setProps({focused: true})">Focus</button>
     <grape-emoji-browser></grape-emoji-browser>
 
     <script>
-      function emoji() {
-        var component = document.querySelectorAll('grape-emoji-browser')[0]
-        component.props = {
+      function setProps(props) {
+        var newProps = getDefaultProps()
+        for (var name in props) newProps[name] = props[name]
+        component.props = newProps
+      }
+
+      function getDefaultProps() {
+        return {
           onSelectTab: function(data) {
             console.log('onSelectTab', data)
           },
           onSelectItem: function(data) {
             console.log('onSelectItem', data)
-          },
-          onNotFound: function() {
-            console.log('nothing found')
           },
           images: {
             emojiSheet: '../../node_modules/js-emoji/images/sheet_32.png',
@@ -42,40 +48,23 @@
           },
           customEmojis: {
             test: '../images/trauby-reading.png'
+          },
+          onBlur: function () {
+            console.log('onBlur')
+          },
+          onAbort: function() {
+            console.log('onAbort')
           }
         }
+      }
 
-        var keysMap = {
-          40: 'down',
-          38: 'up',
-          39: 'right',
-          37: 'left',
-          13: 'enter'
-        }
-
-        window.addEventListener('keydown', function (e) {
-          var action = keysMap[e.keyCode]
-          switch (action) {
-            case 'right':
-              component.focusItem('next')
-              break
-            case 'left':
-              component.focusItem('prev')
-              break
-            case 'down':
-              component.focusItem('nextRow')
-              break
-            case 'up':
-              component.focusItem('prevRow')
-              break
-            case 'enter':
-              console.log(component.getFocusedItem())
-              break;
-            }
-        })
+      function emoji() {
+        window.component = document.querySelectorAll('grape-emoji-browser')[0]
+        setProps()
       }
 
       document.addEventListener('DOMContentLoaded', emoji)
     </script>
+    <script src="http://localhost:8080/webpack-dev-server.js"></script>
   </body>
 </html>
