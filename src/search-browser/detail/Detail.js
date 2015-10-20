@@ -24,63 +24,83 @@ export default class Detail extends Component {
   render() {
     let {classes} = this.props.sheet
     let {data} = this.props
+
+    if (isEmpty(data)) return this.renderEmpty()
+
+    return (
+      <div className={classes.detail}>
+        {this.renderHeader()}
+        <div className={classes.body}>
+          <h2 className={classes.title}>{data.title}</h2>
+          <h3 className={classes.subtitle}>{data.subtitle}</h3>
+          <p className={classes.description}>{data.description}</p>
+          {this.renderMeta()}
+        </div>
+      </div>
+    )
+  }
+
+  renderEmpty() {
+    let {classes} = this.props.sheet
+    return (
+      <div className={`${classes.detail} ${classes.empty}`}>
+        <img src={this.props.images.noDetail} />
+        <span className={classes.emptyNote}>No Detail Infos for this Item</span>
+      </div>
+    )
+  }
+
+  renderHeader() {
+    let {classes} = this.props.sheet
+    let {data} = this.props
     let previewUrl = get(data, 'preview.image.url')
     let {iconUrl} = data
 
-    let header
+    let image
     if (previewUrl || iconUrl) {
-      let image
-
       if (previewUrl) {
         image = <Preview image={previewUrl} spinner={this.props.images.spinner} />
       }
       else {
         image = <img src={iconUrl} className={classes.icon}/>
       }
-
-      header = (
-        <header
-          className={classes.header}
-          style={{height: this.props.headerHeight}}>
-          {image}
-        </header>
-      )
-    }
-
-    if (isEmpty(data)) {
-      return (
-        <div className={`${classes.detail} ${classes.empty}`}>
-          <img src={this.props.images.noDetail} />
-          <span className={classes.emptyNote}>No Detail Infos for this Item</span>
-        </div>
-      )
     }
 
     return (
-      <div className={classes.detail}>
-        {header}
-        <div className={classes.body}>
-          <h2 className={classes.title}>{data.title}</h2>
-          <h3 className={classes.subtitle}>{data.subtitle}</h3>
-          <p className={classes.description}>{data.description}</p>
-          {data.meta &&
-            <div className={classes.metaContainer}>
-              {data.meta.map((item, i) => {
-                return (
-                  <div className={classes.metaRow} key={i}>
-                    <div className={classes.metaLabel}>
-                      {item.label}
-                    </div>
-                    <div className={classes.metaValue}>
-                      {utils.formatDateMaybe(item.label, item.value)}
-                    </div>
-                  </div>
-                )
-              })}
+      <header
+        className={classes.header}
+        style={{height: this.props.headerHeight}}
+        onClick={::this.onClickHeader}>
+        {image}
+      </header>
+    )
+  }
+
+  renderMeta() {
+    let {classes} = this.props.sheet
+    let {data} = this.props
+
+    if (!data.meta) return
+
+    return (
+      <div className={classes.metaContainer}>
+        {data.meta.map((item, i) => {
+          return (
+            <div className={classes.metaRow} key={i}>
+              <div className={classes.metaLabel}>
+                {item.label}
+              </div>
+              <div className={classes.metaValue}>
+                {utils.formatDateMaybe(item.label, item.value)}
+              </div>
             </div>
-          }
-        </div>
+          )
+        })}
       </div>
     )
+  }
+
+  onClickHeader() {
+    window.open(this.props.data.url, '_blank')
   }
 }

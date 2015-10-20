@@ -3,9 +3,7 @@ export default {
     position: 'absolute',
     height: '100%',
     width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+    top: 0
   },
   backdrop: {
     position: 'fixed',
@@ -15,10 +13,6 @@ export default {
     right: 0,
     zIndex: 'auto',
     backgroundColor: '#000',
-    opacity: 0.5
-  },
-  browser: {
-    position: 'relative',
-    margin: '0 10%'
+    opacity: 0.3
   }
 }

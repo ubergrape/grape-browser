@@ -12,6 +12,7 @@ import noop from 'lodash/utility/noop'
 import keyname from 'keyname'
 import {shouldPureComponentUpdate} from 'react-pure-render'
 
+import ModalBrowser from '../modal-browser/Browser'
 import SearchBrowser from '../search-browser/Browser'
 import EmojiBrowser from '../emoji-browser/Browser'
 import * as objectStyle from '../objects/style'
@@ -24,6 +25,7 @@ import {TYPES as QUERY_TYPES} from '../query/constants'
 import QueryModel from '../query/Model'
 import GlobalEvent from '../global-event/GlobalEvent'
 import style from './style'
+import browserStyle from '../browser/style'
 import * as utils from './utils'
 
 const PUBLIC_METHODS = ['setTextContent', 'getTextContent']
@@ -151,33 +153,41 @@ export default class Input extends Component {
 
     if (!browser || !browserOpened) return null
 
+    let top = (window.innerHeight - browserStyle.browser.height) / 2
+
     if (browser === 'search') {
       return (
-        <SearchBrowser
-          {...options}
-          data={data}
-          isLoading={this.props.isLoading}
-          hasIntegrations={this.props.hasIntegrations}
-          canAddIntegrations={this.props.canAddIntegrations}
-          onSelectItem={::this.onSelectSearchBrowserItem}
-          onSelectFilter={::this.onSelectSearchBrowserFilter}
-          onAddIntegration={::this.onAddSearchBrowserIntegration}
-          onInput={::this.onInputSearchBrowser}
-          onAbort={::this.onAbort}
-          onBlur={::this.onBlurBrowser}
-          onDidMount={this.onDidMount.bind(this, 'browser')} />
+        <ModalBrowser>
+          <SearchBrowser
+            {...options}
+            top={top}
+            data={data}
+            isLoading={this.props.isLoading}
+            hasIntegrations={this.props.hasIntegrations}
+            canAddIntegrations={this.props.canAddIntegrations}
+            onSelectItem={::this.onSelectSearchBrowserItem}
+            onSelectFilter={::this.onSelectSearchBrowserFilter}
+            onAddIntegration={::this.onAddSearchBrowserIntegration}
+            onInput={::this.onInputSearchBrowser}
+            onAbort={::this.onAbort}
+            onBlur={::this.onBlurBrowser}
+            onDidMount={this.onDidMount.bind(this, 'browser')} />
+        </ModalBrowser>
       )
     }
 
     if (browser === 'emoji') {
       return (
-        <EmojiBrowser
-          {...options}
-          customEmojis={this.props.customEmojis}
-          onSelectItem={::this.onSelectEmojiBrowserItem}
-          onBlur={::this.onBlurBrowser}
-          onAbort={::this.onAbort}
-          onDidMount={this.onDidMount.bind(this, 'browser')} />
+        <ModalBrowser>
+          <EmojiBrowser
+            {...options}
+            top={top}
+            customEmojis={this.props.customEmojis}
+            onSelectItem={::this.onSelectEmojiBrowserItem}
+            onBlur={::this.onBlurBrowser}
+            onAbort={::this.onAbort}
+            onDidMount={this.onDidMount.bind(this, 'browser')} />
+        </ModalBrowser>
       )
     }
 

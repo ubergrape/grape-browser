@@ -6,13 +6,12 @@ import color from 'color'
 
 export let container = {
   display: 'flex',
-  height: 42,
+  height: 32,
   position: 'relative',
   background: colors.white,
   color: colors.grapeTypo,
   cursor: 'pointer',
-  userSelect: 'none',
-  borderBottom: '1px solid ' + colors.silverDark
+  userSelect: 'none'
 }
 
 let icon = {
@@ -41,7 +40,7 @@ export let rules = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '6px 16px'
+    padding: '6px 20px'
   },
   icon: {
     ...icon,
@@ -55,12 +54,13 @@ export let rules = {
     flex: 1,
     alignSelf: 'center',
     padding: '6px 0',
-    minWidth: 1 // firefox 34+ flexbox bug workaround
+    // firefox 34+ flexbox bug workaround
+    minWidth: 1
   },
   name: {
     ...fonts.normal,
     ...utils.ellipsis,
-    lineHeight: 1.2
+    lineHeight: 1
   },
   info: {
     ...fonts.small,

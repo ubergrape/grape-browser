@@ -15,7 +15,8 @@ export default {
   },
   icon: {
     height: 64,
-    width: 64
+    width: 64,
+    cursor: 'pointer'
   },
   body: {
     padding: 15
@@ -46,18 +47,20 @@ export default {
     textAlign: 'center'
   },
   metaContainer: {
+    paddingTop: 10,
     borderTop: '1px solid ' + colors.silverDark
   },
   metaRow: {
     display: 'flex',
-    padding: '4px 0',
-    borderBottom: '1px solid ' + colors.silverDark
+    padding: '4px 0'
   },
   metaLabel: {
     flex: '1 0 0%',
-    color: colors.gainsboroDark
+    color: colors.gainsboroDark,
+    textAlign: 'right'
   },
   metaValue: {
-    flex: '2 0 0%'
+    flex: '2 0 0%',
+    marginLeft: 10
   }
 }

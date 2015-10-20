@@ -5,6 +5,7 @@ import get from 'lodash/object/get'
 import keyname from 'keyname'
 import {shouldPureComponentUpdate} from 'react-pure-render'
 import noop from 'lodash/utility/noop'
+import isEmpty from 'lodash/lang/isEmpty'
 
 import {useSheet} from '../jss'
 import style from '../browser/style'
@@ -27,8 +28,7 @@ const PUBLIC_METHODS = ['selectTab', 'focusItem', 'getFocusedItem']
 export default class Browser extends Component {
   static defaultProps = {
     data: undefined,
-    height: 400,
-    maxWidth: 920,
+    top: undefined,
     className: '',
     maxItemsPerSectionInAll: 5,
     isExternal: false,
@@ -165,11 +165,13 @@ export default class Browser extends Component {
 
   render() {
     let {classes} = this.props.sheet
-
+    let content = this.renderContent()
+    let inlineStyle = {top: this.props.top}
+    if (!content) inlineStyle.height = 'auto'
     return (
       <div
         className={`${classes.browser} ${this.props.className}`}
-        style={pick(this.props, 'height', 'maxWidth')}
+        style={inlineStyle}
         onMouseDown={::this.onMouseDown}
         data-test="browser">
         <Input
@@ -181,12 +183,17 @@ export default class Browser extends Component {
           filters={this.state.filters}
           search={this.state.search}
           type="search" />
-        {this.state.tabs &&
-          <TabsWithControls data={this.state.tabs} onSelect={::this.onSelectTab} />
-        }
-        {this.renderContent()}
+        {this.renderTabs()}
+        {content}
         {this.props.isLoading && <Spinner image={this.props.images.spinner} />}
       </div>
+    )
+  }
+
+  renderTabs() {
+    if (!this.state.tabs || !this.state.search) return null
+    return (
+      <TabsWithControls data={this.state.tabs} onSelect={::this.onSelectTab} />
     )
   }
 
@@ -195,6 +202,7 @@ export default class Browser extends Component {
     let {data} = this.props
 
     if (!data) return null
+    if (!this.state.search && isEmpty(this.state.filters)) return null
 
     let selectedSection = dataUtils.getSelectedSection(sections)
     if (selectedSection) sections = [selectedSection]
@@ -220,7 +228,6 @@ export default class Browser extends Component {
     let Service = services.Default
     let props = pick(this.props, 'hasIntegrations', 'canAddIntegrations',
       'images', 'onAddIntegration', 'orgName', 'orgOwner')
-
     return (
       <Service
         {...props}

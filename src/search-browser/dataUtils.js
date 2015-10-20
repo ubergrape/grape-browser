@@ -76,12 +76,13 @@ export let getSections = (() => {
           id: result.id,
           type: result.type,
           name: result.name,
-          info: result.container,
+          // Todo bring this back for queries.
+          // info: result.container,
           date: result.start,
           focused: false,
           icon: serviceIconMap[result.service],
-          detail: result.detail,
-          search: newData.search.text
+          detail: {...result.detail, url: result.url},
+          search: newData.search.text,
         })
       }
     })

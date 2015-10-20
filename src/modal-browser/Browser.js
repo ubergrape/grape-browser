@@ -12,8 +12,7 @@ import {useSheet} from '../jss'
 @useSheet(style)
 export default class ModalBrowser extends Component {
   static defaultProps = {
-    onAbort: noop,
-    browser: undefined
+    onAbort: noop
   }
 
   constructor(props) {
@@ -32,17 +31,13 @@ export default class ModalBrowser extends Component {
 
   render() {
     let {classes} = this.props.sheet
-    let Browser = this.props.browser
-
     return (
       <Modal
         show={this.state.show}
         className={classes.modal}
         backdropClassName={classes.backdrop}
         onHide={::this.onHide}>
-        <Browser
-          {...this.state}
-          className={classes.browser} />
+        {this.props.children}
       </Modal>
     )
   }

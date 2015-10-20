@@ -60,15 +60,20 @@ export default class Input extends Component {
     let {classes} = this.props.sheet
 
     return (
-      <input
-        value={this.state.value}
-        type="text"
-        className={classes.input}
-        ref="input"
-        data-test="input"
-        onChange={::this.onInput}
-        onKeyDown={::this.onKeyDown}
-        onBlur={::this.onBlur} />
+      <div className={classes.container}>
+        <span
+          onClick={::this.onClickIcon}
+          className={`fa fa-lg fa-search ${classes.icon}`}></span>
+        <input
+          value={this.state.value}
+          type="text"
+          className={classes.input}
+          ref="input"
+          data-test="input"
+          onChange={::this.onInput}
+          onKeyDown={::this.onKeyDown}
+          onBlur={::this.onBlur} />
+      </div>
     )
   }
 
@@ -81,6 +86,10 @@ export default class Input extends Component {
 
   focus() {
     return React.findDOMNode(this.refs.input).focus()
+  }
+
+  onClickIcon() {
+    this.setState({focused: true})
   }
 
   onInput(e) {

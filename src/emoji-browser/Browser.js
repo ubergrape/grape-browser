@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import findIndex from 'lodash/array/findIndex'
-import pick from 'lodash/object/pick'
 import get from 'lodash/object/get'
 import assign from 'lodash/object/assign'
 import noop from 'lodash/utility/noop'
@@ -27,8 +26,6 @@ class Browser extends Component {
   static defaultProps = {
     customEmojis: undefined,
     images: {},
-    height: 400,
-    maxWidth: 920,
     className: '',
     focused: undefined,
     onSelectItem: noop,
@@ -72,7 +69,7 @@ class Browser extends Component {
     let currEmojiSheet = get(this.props, 'images.emojiSheet')
     let newEmojiSheet = get(nextProps, 'images.emojiSheet')
     if (newEmojiSheet && (newEmojiSheet !== currEmojiSheet || !emoji.get())) {
-      PublicBrowser.init({
+      EmojiBrowser.init({
         emojiSheet: newEmojiSheet,
         customEmojis: nextProps.customEmojis
       })
@@ -99,7 +96,7 @@ class Browser extends Component {
     return (
       <div
         className={`${classes.browser} ${this.props.className}`}
-        style={pick(this.props, 'height', 'maxWidth')}
+        style={{top: this.props.top}}
         onMouseDown={::this.onMouseDown}>
         <GlobalEvent
           event="resize"
@@ -289,12 +286,12 @@ class Browser extends Component {
   }
 }
 
-let PublicBrowser = useSheet(Browser, style)
-PublicBrowser.init = (options) => {
+let EmojiBrowser = useSheet(Browser, style)
+EmojiBrowser.init = (options) => {
   let {emojiSheet, customEmojis} = options
   if (emojiSheet) emoji.setSheet(emojiSheet)
   if (customEmojis) emoji.defineCustom(customEmojis)
   dataUtils.init()
 }
 
-export default PublicBrowser
+export default EmojiBrowser

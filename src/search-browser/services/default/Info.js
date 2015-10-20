@@ -36,7 +36,7 @@ export default class Info extends Component {
     }
 
     let headerStyle = {
-      height: this.props.headerHeight + 'px',
+      height: this.props.headerHeight,
       backgroundImage: `url(${images.traubyReading})`
     }
 
