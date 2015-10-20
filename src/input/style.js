@@ -19,7 +19,7 @@ export default {
     ...fonts.big,
     width: '100%',
     color: colors.grapeTypo,
-    border: 'none',
+    border: 'none !important',
     padding: 15,
     paddingLeft: 0,
     outline: 'none'

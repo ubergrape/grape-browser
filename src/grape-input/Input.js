@@ -27,6 +27,7 @@ import GlobalEvent from '../global-event/GlobalEvent'
 import style from './style'
 import browserStyle from '../browser/style'
 import * as utils from './utils'
+import searchAd from '../search-ad/searchAd'
 
 const PUBLIC_METHODS = ['setTextContent', 'getTextContent']
 
@@ -66,6 +67,9 @@ export default class Input extends Component {
     this.query = new QueryModel({onChange: ::this.onChangeQuery})
     this.exposePublicMethods()
     this.state = this.createState(this.props)
+    this.searchAd = searchAd((text) => {
+      this.setState({placeholder: text})
+    })
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate
@@ -79,8 +83,9 @@ export default class Input extends Component {
         customEmojis: nextProps.customEmojis
       })
     }
-
-    this.setState(this.createState(nextProps))
+    let state = this.createState(nextProps)
+    this.searchAd.start(state.placeholder)
+    this.setState(state)
   }
 
   componentDidMount() {
@@ -92,6 +97,7 @@ export default class Input extends Component {
 
   componentWillUnmount() {
     objectStyle.sheet.detach()
+    this.searchAd.stop()
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -131,7 +137,7 @@ export default class Input extends Component {
             <Editable
               width={this.state.editableWidth}
               height={this.state.editableHeight}
-              placeholder={this.props.placeholder}
+              placeholder={this.state.placeholder}
               disabled={this.props.disabled}
               focused={this.state.editableFocused}
               insertAnimationDuration={objectStyle.INSERT_ANIMATION_DURATION}
@@ -201,7 +207,7 @@ export default class Input extends Component {
   }
 
   createState(nextProps) {
-    let state = pick(nextProps, 'browser', 'data', 'isLoading')
+    let state = pick(nextProps, 'browser', 'data', 'isLoading', 'placeholder')
     state.editableFocused = nextProps.focused
     if (state.browser === 'user') state.data = mentions.map(state.data)
     if (isArray(state.data)) state.data = state.data.slice(0, nextProps.maxCompleteItems)

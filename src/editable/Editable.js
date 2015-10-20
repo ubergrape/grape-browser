@@ -101,7 +101,7 @@ export default class Editable extends Component {
   setClassName(props) {
     let {classes} = props.sheet
     let classNames = [classes.editable]
-    if (utils.isEmpty(this.node) && !props.focused) {
+    if (utils.isEmpty(this.node)) {
       classNames.push(classes.placeholder)
     }
     this.node.className = classNames.join(' ')
