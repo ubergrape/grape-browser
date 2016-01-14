@@ -220,6 +220,10 @@ export default class Input extends Component {
     this.emit('change')
   }
 
+  onBlurInput() {
+    this.emit('blur')
+  }
+
   setTrigger(browser) {
     if (!browser) return
     this.query.set('trigger', QUERY_TYPES[browser])
@@ -400,6 +404,7 @@ export default class Input extends Component {
             onAbort={::this.onAbort}
             onResize={::this.onInputResize}
             onChange={::this.onChangeInput}
+            onBlur={::this.onBlurInput}
             onSubmit={::this.onSubmit}
             onEditPrevious={::this.onEditPrevious}
             onDidMount={this.onDidMount.bind(this, 'textarea')}
