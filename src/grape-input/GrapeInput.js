@@ -86,7 +86,11 @@ export default class Input extends Component {
   componentWillReceiveProps(nextProps) {
     const {ignoreSuggest} = this.state
     const isEmojiSuggest = nextProps.browser === 'emojiSuggest'
-    if (ignoreSuggest && isEmojiSuggest) return this.setState({ignoreSuggest: false})
+
+    if (ignoreSuggest && isEmojiSuggest) {
+      this.setState({ignoreSuggest: false})
+      return
+    }
 
     const newEmojiSheet = get(nextProps, 'images.emojiSheet')
     const currEmojiSheet = get(this.props, 'images.emojiSheet')
@@ -96,14 +100,13 @@ export default class Input extends Component {
         customEmojis: nextProps.customEmojis
       })
     }
-
     this.setState(this.createState(nextProps))
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextState.browser !== this.state.browser) {
+    if (nextState.browser !== this.state.browser && nextProps.setTrigger) {
       this.setTrigger(nextState.browser)
     }
   }
@@ -180,10 +183,12 @@ export default class Input extends Component {
     }
   }
 
+  onBlurInput() {
+    if (!this.state.browser) this.emit('blur')
+  }
+
   onBlurBrowser() {
-    this.blurTimeoutId = setTimeout(() => {
-      this.closeBrowser()
-    }, 50)
+    this.closeBrowser()
   }
 
   onBlurWindow() {
@@ -218,10 +223,6 @@ export default class Input extends Component {
       if (this.state.browser) this.onAbort({reason: 'deleteTrigger'})
     }
     this.emit('change')
-  }
-
-  onBlurInput() {
-    this.emit('blur')
   }
 
   setTrigger(browser) {
