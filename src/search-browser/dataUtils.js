@@ -52,7 +52,7 @@ export let getSections = (() => {
       let service = findById(newData.services, result.service)
 
       if (!service) {
-        //warn('No service corresponding the item.', result)
+        warn('No service corresponding the item.', result)
         return
       }
 
