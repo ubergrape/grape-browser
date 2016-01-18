@@ -63,7 +63,18 @@ export default class HighlightedTextarea extends Component {
 
   componentDidUpdate() {
     const {textarea} = this.refs
-    if (this.props.focused) textarea.focus()
+    if (this.props.focused && !isFocused(textarea)) {
+      // Fix for:
+      // https://connect.microsoft.com/IE/feedback/details/808820/ie11-input-element-gets-focus-but-caret-not-showing-when-pinch-zooming
+      // https://support.microsoft.com/en-us/kb/2927972
+      if (/Trident/.test(window.navigator.userAgent)) {
+        setTimeout(() => {
+          textarea.focus()
+        }, 0)
+      } else {
+        textarea.focus()
+      }
+    }
 
     if (isFocused(textarea)) {
       const {caretPos} = this.state

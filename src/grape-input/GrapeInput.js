@@ -188,9 +188,7 @@ export default class Input extends Component {
   }
 
   onBlurBrowser() {
-    this.blurTimeoutId = setTimeout(() => {
-      this.closeBrowser()
-    }, 100)
+    this.closeBrowser()
   }
 
   onBlurWindow() {
