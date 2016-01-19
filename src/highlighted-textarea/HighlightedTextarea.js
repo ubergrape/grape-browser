@@ -8,11 +8,14 @@ import {
   updateIfNewEmoji,
   parseAndReplace,
   ensureSpace,
-  isFocused
+  isFocused,
+  focus
 } from './utils'
 
 import keyname from 'keyname'
 import {create as createObject} from '../objects'
+
+import noop from 'lodash/utility/noop'
 
 import {useSheet} from 'grape-web/lib/jss'
 import style from './style'
@@ -38,7 +41,9 @@ export default class HighlightedTextarea extends Component {
     content: '',
     placeholder: '',
     focused: true,
-    disabled: false
+    disabled: false,
+    onChange: noop,
+    onBlur: noop
   }
 
   constructor(props) {
@@ -63,18 +68,7 @@ export default class HighlightedTextarea extends Component {
 
   componentDidUpdate() {
     const {textarea} = this.refs
-    if (this.props.focused && !isFocused(textarea)) {
-      // Fix for:
-      // https://connect.microsoft.com/IE/feedback/details/808820/ie11-input-element-gets-focus-but-caret-not-showing-when-pinch-zooming
-      // https://support.microsoft.com/en-us/kb/2927972
-      if (/Trident/.test(window.navigator.userAgent)) {
-        setTimeout(() => {
-          textarea.focus()
-        }, 0)
-      } else {
-        textarea.focus()
-      }
-    }
+    if (this.props.focused) focus(textarea)
 
     if (isFocused(textarea)) {
       const {caretPos} = this.state

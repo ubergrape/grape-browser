@@ -335,17 +335,18 @@ export default class Browser extends Component {
     this.blurPrevented = true
 
     // Avoids loosing focus and though caret position in input.
-    e.preventDefault()
+    const input = ReactDOM.findDOMNode(this.refs.browserInput)
+    if (e.target !== input) e.preventDefault()
   }
 
-  onBlur() {
+  onBlur(e) {
     if (!this.blurPrevented) {
       this.props.onBlur()
       return
     }
 
     this.blurPrevented = false
-    ReactDOM.findDOMNode(this.refs.browserInput).focus()
+    e.target.focus()
   }
 
   onAbort(data) {
