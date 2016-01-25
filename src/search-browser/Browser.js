@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import findIndex from 'lodash/array/findIndex'
 import pick from 'lodash/object/pick'
 import get from 'lodash/object/get'
@@ -173,9 +174,10 @@ export default class Browser extends Component {
         onMouseDown={::this.onMouseDown}
         data-test="browser">
         <Input
+          ref="browserInput"
           onInput={::this.onInput}
           onChangeFilters={this.props.onSelectFilter}
-          onBlur={this.props.onBlur}
+          onBlur={::this.onBlur}
           onKeyDown={::this.onKeyDown}
           focused={this.props.focused}
           filters={this.state.filters}
@@ -328,8 +330,23 @@ export default class Browser extends Component {
   }
 
   onMouseDown(e) {
+    // This flag is to fix IE11 issue
+    // http://stackoverflow.com/questions/2023779/clicking-on-a-divs-scroll-bar-fires-the-blur-event-in-i-e
+    this.blurPrevented = true
+
     // Avoids loosing focus and though caret position in input.
-    e.preventDefault()
+    const input = ReactDOM.findDOMNode(this.refs.browserInput)
+    if (e.target !== input) e.preventDefault()
+  }
+
+  onBlur(e) {
+    if (!this.blurPrevented) {
+      this.props.onBlur()
+      return
+    }
+
+    this.blurPrevented = false
+    e.target.focus()
   }
 
   onAbort(data) {

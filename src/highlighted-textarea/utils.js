@@ -213,7 +213,7 @@ export function getTokenUnderCaret(string, caretPostion) {
 
       if ((nextSymbol && emptySpaceRegExp.test(nextSymbol)) ||
           nextSymbolIndex < 0 ||
-          nextSymbolIndex === string.length) {
+          nextSymbolIndex >= string.length) {
         position.push(previousSymbolIndex)
         tailFound = true
         break
@@ -248,4 +248,22 @@ export function getQuery(value, selectionEnd) {
  */
 export function isFocused(node) {
   return node === document.activeElement
+}
+
+const isTrident = /Trident/.test(window.navigator.userAgent)
+
+/**
+ * Focus element with IE hack.
+ */
+export function focus(node) {
+  if (isFocused(node)) return
+
+  // Fix for:
+  // https://connect.microsoft.com/IE/feedback/details/808820/ie11-input-element-gets-focus-but-caret-not-showing-when-pinch-zooming
+  // https://support.microsoft.com/en-us/kb/2927972
+  if (isTrident) {
+    setTimeout(::node.focus)
+    return
+  }
+    node.focus()
 }

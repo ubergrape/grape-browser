@@ -86,7 +86,11 @@ export default class Input extends Component {
   componentWillReceiveProps(nextProps) {
     const {ignoreSuggest} = this.state
     const isEmojiSuggest = nextProps.browser === 'emojiSuggest'
-    if (ignoreSuggest && isEmojiSuggest) return this.setState({ignoreSuggest: false})
+
+    if (ignoreSuggest && isEmojiSuggest) {
+      this.setState({ignoreSuggest: false})
+      return
+    }
 
     const newEmojiSheet = get(nextProps, 'images.emojiSheet')
     const currEmojiSheet = get(this.props, 'images.emojiSheet')
@@ -96,14 +100,13 @@ export default class Input extends Component {
         customEmojis: nextProps.customEmojis
       })
     }
-
     this.setState(this.createState(nextProps))
   }
 
   shouldComponentUpdate = shouldPureComponentUpdate
 
   componentWillUpdate(nextProps, nextState) {
-    if (nextState.browser !== this.state.browser) {
+    if (nextState.browser !== this.state.browser && nextProps.setTrigger) {
       this.setTrigger(nextState.browser)
     }
   }
@@ -180,10 +183,14 @@ export default class Input extends Component {
     }
   }
 
+  onBlurInput() {
+    if (!this.state.browser) this.emit('blur')
+  }
+
   onBlurBrowser() {
     this.blurTimeoutId = setTimeout(() => {
       this.closeBrowser()
-    }, 50)
+    }, 100)
   }
 
   onBlurWindow() {
@@ -400,6 +407,7 @@ export default class Input extends Component {
             onAbort={::this.onAbort}
             onResize={::this.onInputResize}
             onChange={::this.onChangeInput}
+            onBlur={::this.onBlurInput}
             onSubmit={::this.onSubmit}
             onEditPrevious={::this.onEditPrevious}
             onDidMount={this.onDidMount.bind(this, 'textarea')}

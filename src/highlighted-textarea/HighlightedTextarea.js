@@ -8,11 +8,15 @@ import {
   updateIfNewEmoji,
   parseAndReplace,
   ensureSpace,
-  isFocused
+  isFocused,
+  focus
 } from './utils'
 
 import keyname from 'keyname'
 import {create as createObject} from '../objects'
+
+import noop from 'lodash/utility/noop'
+import escape from 'lodash/string/escape'
 
 import {useSheet} from 'grape-web/lib/jss'
 import style from './style'
@@ -26,6 +30,7 @@ export default class HighlightedTextarea extends Component {
     onEditPrevious: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onResize: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired,
     sheet: PropTypes.object.isRequired,
     preventSubmit: PropTypes.bool,
     focused: PropTypes.bool,
@@ -37,7 +42,9 @@ export default class HighlightedTextarea extends Component {
     content: '',
     placeholder: '',
     focused: true,
-    disabled: false
+    disabled: false,
+    onChange: noop,
+    onBlur: noop
   }
 
   constructor(props) {
@@ -62,7 +69,7 @@ export default class HighlightedTextarea extends Component {
 
   componentDidUpdate() {
     const {textarea} = this.refs
-    if (this.props.focused) textarea.focus()
+    if (this.props.focused) focus(textarea)
 
     if (isFocused(textarea)) {
       const {caretPos} = this.state
@@ -175,6 +182,10 @@ export default class HighlightedTextarea extends Component {
 
   onResize() {
     this.props.onResize()
+  }
+
+  onBlur() {
+    this.props.onBlur()
   }
 
   /**
@@ -311,7 +322,15 @@ export default class HighlightedTextarea extends Component {
   renderTokens() {
     const content = this.state.textWithObjects.map((item, index) => {
       if (item.content) return this.renderToken(item, index)
-      return <span key={index}>{item}</span>
+
+      // this dangerouslySetInnerHTML is required due to bug in IE11:
+      // https://github.com/ubergrape/chatgrape/issues/3279
+      return (
+        <span
+          key={index}
+          dangerouslySetInnerHTML={{__html: escape(item)}}>
+        </span>
+      )
     })
 
     // The last item is space,
@@ -378,6 +397,7 @@ export default class HighlightedTextarea extends Component {
             disabled={this.props.disabled}
             onKeyDown={::this.onKeyDown}
             onChange={::this.onChange}
+            onBlur={::this.onBlur}
             value={this.state.text}
             autoFocus></textarea>
       </div>

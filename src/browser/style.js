@@ -31,6 +31,6 @@ export default {
     minWidth: 256,
     maxWidth: 384,
     overflowX: 'hidden',
-    overflowY: 'scroll'
+    overflowY: 'auto'
   }
 }
