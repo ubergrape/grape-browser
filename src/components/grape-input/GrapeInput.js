@@ -194,7 +194,7 @@ export default class GrapeInput extends Component {
    * clean up the content.
    */
   setTextContent(content, options = {}) {
-    if (!this.props.focused) return false
+    if (this.props.disabled) return false
 
     const {configs, text} = parseAndReplace(content)
     const objects = clearIfLarge(this.state.objects)
