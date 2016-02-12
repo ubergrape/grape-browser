@@ -17,10 +17,6 @@ const emptySpaceRegExp = /^\s$/
 
 const maxObjectsAmount = 1000
 
-function tokenWithoutTrigger(token, type) {
-  return token[0] === getTrigger(type) ? token.substr(1) : token
-}
-
 function tokenWithTrigger(token, type) {
   const trigger = getTrigger(type)
   return token[0] === trigger ? token : trigger + token
