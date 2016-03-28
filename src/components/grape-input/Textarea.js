@@ -7,6 +7,8 @@ export default class Textarea extends Component {
     onKeyDown: PropTypes.func,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
+    onAccent: PropTypes.func,
+    accentMode: PropTypes.object.isRequired,
     className: PropTypes.string
   }
 
@@ -14,11 +16,35 @@ export default class Textarea extends Component {
     onKeyDown: noop,
     onChange: noop,
     onSubmit: noop,
+    onAccent: noop,
     className: '',
     placeholder: ''
   }
 
+  constructor() {
+    super()
+    this.state = {
+      value: '',
+      locked: false
+    }
+  }
+
+  componentDidMount() {
+    this.props.accentMode.setNode(this.refs.textarea)
+  }
+
+  componentWillReceiveProps({value}) {
+    if (!this.props.accentMode.active) this.setState({value})
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (!nextState.locked) return true
+    return !this.state.locked
+  }
+
   onKeyDown(e) {
+    this.props.accentMode.set(e.keyCode === 229)
+
     const isEnter = keyname(e.keyCode) === 'enter'
 
     if (isEnter) {
@@ -44,6 +70,18 @@ export default class Textarea extends Component {
     }
   }
 
+  onChange(e) {
+    if (this.props.accentMode.active) {
+      const {value} = e.target
+      this.setState({value, locked: true}, () => {
+        this.props.onAccent(value)
+        this.setState({locked: false})
+      })
+      return
+    }
+    this.props.onChange(e)
+  }
+
   insertLineBreak() {
     const {textarea} = this.refs
     const {selectionStart, selectionEnd, value} = textarea
@@ -61,6 +99,8 @@ export default class Textarea extends Component {
       <textarea
         {...this.props}
         ref="textarea"
+        value={this.state.value}
+        onChange={::this.onChange}
         onKeyDown={::this.onKeyDown}></textarea>
     )
   }
