@@ -215,12 +215,11 @@ export class AccentMode {
     node.addEventListener('blur', ::this.setInactive)
   }
 
-  setActive() {
-    this.active = true
+  set(state) {
+    this.active = state
   }
 
   setInactive() {
     this.active = false
   }
 }
-

@@ -1,7 +1,6 @@
 import React, {PropTypes, Component} from 'react'
 import keyname from 'keyname'
 import noop from 'lodash/utility/noop'
-import {setCaretPosition} from './utils'
 
 export default class Textarea extends Component {
   static propTypes = {
@@ -34,23 +33,16 @@ export default class Textarea extends Component {
   }
 
   componentWillReceiveProps({value}) {
-    if (!this.props.accentMode.active) {
-      this.setState({value})
-    }
+    if (!this.props.accentMode.active) this.setState({value})
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextState.locked === false) return true
-    const should = !(this.state.locked)
-    return should
+    if (!nextState.locked) return true
+    return !this.state.locked
   }
 
   onKeyDown(e) {
-    if (e.keyCode === 229) {
-      this.props.accentMode.setActive()
-    } else {
-      this.props.accentMode.setInactive()
-    }
+    this.props.accentMode.set(e.keyCode === 229)
 
     const isEnter = keyname(e.keyCode) === 'enter'
 
