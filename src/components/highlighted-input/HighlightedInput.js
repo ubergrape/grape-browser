@@ -92,7 +92,6 @@ export default class HighlightedInput extends Component {
   }
 
   onKeyDown(e) {
-    if (e.keyCode === 229) return
     this.props.onKeyDown(e)
     if (e.defaultPrevented) return
 

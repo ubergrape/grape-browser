@@ -3,6 +3,10 @@ import noop from 'lodash/utility/noop'
 
 export default class InputWithScrollEvent extends Component {
   static propTypes = {
+    onAccent: PropTypes.func,
+    onKeyDown: PropTypes.func,
+    onChange: PropTypes.func,
+    accentMode: PropTypes.object.isRequired,
     scrollDetectionEvents: PropTypes.array,
     onScroll: PropTypes.func
   }
@@ -11,16 +15,33 @@ export default class InputWithScrollEvent extends Component {
     scrollDetectionEvents: ['onInput', 'onKeyDown', 'onKeyUp', 'onFocus',
       'onBlur', 'onClick', 'onChange', 'onPaste', 'onCut', 'onMouseDown',
       'onMouseUp', 'onMouseOver'],
-    onScroll: noop
+    onScroll: noop,
+    onAccent: noop,
+    onKeyDown: noop,
+    onChange: noop
   }
 
   constructor(props) {
     super(props)
+    this.state = {
+      value: '',
+      locked: false
+    }
     this.handlers = this.createScrollDetectionHandlers()
   }
 
   componentDidMount() {
+    this.props.accentMode.setNode(this.refs.input)
     this.scrollPosition = this.getScrollPosition()
+  }
+
+  componentWillReceiveProps({value}) {
+    if (!this.props.accentMode.active) this.setState({value})
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (!nextState.locked) return true
+    return !this.state.locked
   }
 
   onScroll({target}) {
@@ -32,6 +53,23 @@ export default class InputWithScrollEvent extends Component {
     }
   }
 
+  onKeyDown(e) {
+    this.props.accentMode.set(e.keyCode === 229)
+    this.props.onKeyDown(e)
+  }
+
+  onChange(e) {
+    if (this.props.accentMode.active) {
+      const {value} = e.target
+      this.setState({value, locked: true}, () => {
+        this.props.onAccent(value)
+        this.setState({locked: false})
+      })
+      return
+    }
+    this.props.onChange(e)
+  }
+
   onEventProxy(name, e) {
     // Use delay because native scroll happens after some of the events.
     setTimeout(() => {
@@ -40,6 +78,10 @@ export default class InputWithScrollEvent extends Component {
       if (target) this.onScroll({target})
     })
     // Call original callback if it exists.
+    if (this[name]) {
+      this[name](e)
+      return
+    }
     if (this.props[name]) this.props[name](e)
   }
 
@@ -60,7 +102,7 @@ export default class InputWithScrollEvent extends Component {
       <input
         {...this.props}
         {...this.handlers}
-        onScroll={this.props.onScroll}
+        value={this.state.value}
         ref="input" />
     )
   }

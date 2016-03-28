@@ -8,7 +8,7 @@ export default class Textarea extends Component {
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
     onAccent: PropTypes.func,
-    accentMode: PropTypes.object,
+    accentMode: PropTypes.object.isRequired,
     className: PropTypes.string
   }
 
@@ -16,6 +16,7 @@ export default class Textarea extends Component {
     onKeyDown: noop,
     onChange: noop,
     onSubmit: noop,
+    onAccent: noop,
     className: '',
     placeholder: ''
   }
