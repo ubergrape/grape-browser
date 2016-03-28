@@ -204,3 +204,23 @@ export function scrollLeftToCaret(node) {
   const isVisible = left > scrollLeft && left < (scrollLeft + offsetWidth)
   if (!isVisible) node.scrollLeft = left
 }
+
+export class AccentMode {
+  constructor() {
+    this.active = false
+  }
+
+  setNode(node) {
+    node.addEventListener('click', ::this.setInactive)
+    node.addEventListener('blur', ::this.setInactive)
+  }
+
+  setActive() {
+    this.active = true
+  }
+
+  setInactive() {
+    this.active = false
+  }
+}
+
