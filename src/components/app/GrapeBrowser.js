@@ -18,7 +18,7 @@ import Datalist from '../datalist/Datalist'
 import * as mentions from '../mentions/mentions'
 import {TYPES as QUERY_TYPES} from '../query/constants'
 import QueryModel from '../query/Model'
-import GlobalEvent from '../global-event/GlobalEvent'
+import GlobalEvent from 'grape-web/lib/global-event/GlobalEvent'
 import * as emoji from '../emoji'
 import style from './style'
 import * as utils from './utils'
@@ -44,7 +44,6 @@ export default class GrapeBrowser extends Component {
     container: PropTypes.object,
     isLoading: PropTypes.bool,
     placeholder: PropTypes.string,
-    ignoreSuggest: PropTypes.bool,
     setTrigger: PropTypes.bool,
     disabled: PropTypes.bool,
     sheet: PropTypes.object.isRequired,
@@ -71,7 +70,6 @@ export default class GrapeBrowser extends Component {
     placeholder: undefined,
     focused: false,
     disabled: false,
-    ignoreSuggest: false,
     setTrigger: false,
     isLoading: false,
     onAbort: undefined,
@@ -102,13 +100,6 @@ export default class GrapeBrowser extends Component {
     // To avoid this we introduced temporarily shallowEqual, hopefully it can
     // go away after full migration to redux.
     if (shallowEqual(nextProps, this.props)) return
-
-    const {ignoreSuggest} = this.state
-    const isEmojiSuggest = nextProps.browser === 'emojiSuggest'
-    if (ignoreSuggest && isEmojiSuggest) {
-      this.setState({ignoreSuggest: false})
-      return
-    }
 
     const newEmojiSheet = get(nextProps, 'images.emojiSheet')
     const currEmojiSheet = get(this.props, 'images.emojiSheet')
@@ -242,20 +233,23 @@ export default class GrapeBrowser extends Component {
   }
 
   onChangeInput({query, content} = {}) {
+    // Handler might be called when content has been just set, so it is changed
+    // for the underlying component but not here.
+    const contentHasChanged = content !== this.state.content
+    const isBrowserOpened = Boolean(this.state.browser)
+    const hasTrigger = Boolean(query && query.trigger)
+
     clearTimeout(this.searchBrowserInputTimeoutId)
-    if (query && query.trigger) {
-      // If it is a browser trigger, we don't reopen browser, but let user type
-      // whatever he wants.
-      // If its a mentioning, user types the search.
-      // TODO migrate mentioning to the browser.
-      if (!query.search || !utils.isBrowserType(query.trigger)) {
-        this.query.set(query, {silent: true})
-        this.emit('complete', {...this.query.toJSON(), emoji})
-      }
+
+    if (hasTrigger && contentHasChanged) {
+      this.query.set(query, {silent: true})
+      this.emit('complete', {...this.query.toJSON(), emoji})
+    }
+
     // Query has been removed or caret position changed, for datalist only.
-    } else if (!this.query.isEmpty()) {
+    if (!hasTrigger && !this.query.isEmpty()) {
       this.query.reset()
-      if (this.state.browser) this.onAbort({reason: 'deleteTrigger'})
+      if (isBrowserOpened) this.onAbort({reason: 'deleteTrigger'})
     }
 
     if (content === undefined) this.emit('change')
@@ -268,6 +262,7 @@ export default class GrapeBrowser extends Component {
 
   setTrigger(browser) {
     if (!browser) return
+
     this.query.set('trigger', QUERY_TYPES[browser])
   }
 
@@ -289,7 +284,7 @@ export default class GrapeBrowser extends Component {
   }
 
   createState(nextProps) {
-    const state = pick(nextProps, 'browser', 'data', 'isLoading', 'ignoreSuggest')
+    const state = pick(nextProps, 'browser', 'data', 'isLoading')
 
     if (state.browser === 'user') {
       state.data = mentions
