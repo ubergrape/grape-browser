@@ -3,7 +3,7 @@
     "defaultMessage": "No emoji found."
   },
   "willNotifyRoom": {
-    "defaultMessage": "— notify everyone in this room",
+    "defaultMessage": "— notify everyone in this group",
     "description": "*Describe willNotifyRoom*: this string is decribing action"
   },
   "wontNotifyRoom": {
@@ -14,10 +14,10 @@
     "defaultMessage": "not in room"
   },
   "noDetailForItem": {
-    "defaultMessage": "No Detail Infos for this Item"
+    "defaultMessage": "No detail infos for this item"
   },
   "searchInfo": {
-    "defaultMessage": "Search Wikipedia, Youtube, Giphy and {tools} by clicking {plusIcon} or pressing the plus key"
+    "defaultMessage": "Search Wikipedia, YouTube, Giphy and {tools} by clicking {plusIcon} or pressing the plus key on your keyboard"
   },
   "yourBusinessTools": {
     "defaultMessage": "your business tools",
