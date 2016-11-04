@@ -1,6 +1,6 @@
 const size = 22
 
-export default {
+export const styles = {
   icon: {
     display: 'inline-block',
     backgroundRepeat: 'no-repeat',

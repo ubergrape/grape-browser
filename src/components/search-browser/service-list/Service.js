@@ -32,7 +32,7 @@ export default class Service extends Component {
         onClick={this.props.onSelect.bind(null, item)}
         onMouseOver={this.props.onFocus.bind(null, item)}>
         <div className={classes.iconContainer}>
-          <ServiceIcon service={item.id} />
+          <ServiceIcon icon={item.icon} />
         </div>
         <div className={classes.name}>
           {item.label}
