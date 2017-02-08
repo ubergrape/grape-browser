@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PureComponent, PropTypes} from 'react'
 import noop from 'lodash/utility/noop'
 import injectSheet from 'grape-web/lib/jss'
 import List from 'react-finite-list'
@@ -28,11 +28,11 @@ const messages = defineMessages({
  */
 @injectSheet(style)
 @injectIntl
-export default class Results extends Component {
+export default class Results extends PureComponent {
   static propTypes = {
     sheet: PropTypes.object.isRequired,
     intl: intlShape.isRequired,
-    focusedResult: PropTypes.object,
+    focusedResult: PropTypes.object.isRequired,
     focusedView: PropTypes.oneOf(listTypes),
     data: PropTypes.array,
     onSelect: PropTypes.func,
@@ -40,11 +40,13 @@ export default class Results extends Component {
   }
 
   static defaultProps = {
+    focusedResult: {},
     onSelect: noop,
     onFocus: noop
   }
 
-  renderResult = ({item, focused}) => {
+  renderResult = (params) => {
+    const {item, focused} = params
     const {
       intl: {formatMessage},
       focusedView,
@@ -71,14 +73,12 @@ export default class Results extends Component {
   }
 
   render() {
-    const {classes} = this.props.sheet
-    const {focusedResult} = this.props
-
-    let details
-    if (focusedResult) {
-      const {detail, service} = focusedResult
-      details = {...detail, service}
-    }
+    const {
+      sheet: {classes},
+      focusedResult,
+      data,
+      focusedResult: {detail, icon}
+    } = this.props
 
     return (
       <div className={classes.column}>
@@ -86,10 +86,10 @@ export default class Results extends Component {
           <List
             className={classes.leftColumn}
             renderItem={this.renderResult}
-            items={this.props.data}
-            focused={this.props.focusedResult} />
+            items={data}
+            focused={focusedResult} />
           <Sidebar className={classes.rightColumn}>
-            <Detail {...this.props} data={details} />
+            <Detail {...this.props} data={detail} icon={icon} />
           </Sidebar>
         </div>
       </div>

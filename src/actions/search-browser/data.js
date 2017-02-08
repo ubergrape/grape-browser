@@ -33,19 +33,18 @@ export function formatGroupedResults({results, services, search}) {
     })
 
     // Build new result items.
-    const newGroupResults = groupResults.map(result => {
-      return {
-        id: result.id,
-        type: result.type,
-        name: result.name,
-        info: result.container,
-        date: result.start,
-        focused: false,
-        service: result.service,
-        detail: result.detail || {},
-        search: search.text
-      }
-    })
+    const newGroupResults = groupResults.map(result => ({
+      id: result.id,
+      type: result.type,
+      name: result.name,
+      info: result.container,
+      date: result.start,
+      focused: false,
+      service: result.service,
+      icon: result.icon,
+      detail: result.detail || {},
+      search: search.text
+    }))
 
     return newResults.concat(newGroupResults)
   }, [])

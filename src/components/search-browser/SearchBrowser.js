@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PureComponent, PropTypes} from 'react'
 import keyname from 'keyname'
 import Spinner from 'grape-web/lib/spinner/Spinner'
 import injectSheet from 'grape-web/lib/jss'
@@ -23,13 +23,12 @@ const messages = defineMessages({
   }
 })
 
-
 /**
  * Main search browser component.
  */
 @injectSheet(style)
 @injectIntl
-export default class SearchBrowser extends Component {
+export default class SearchBrowser extends PureComponent {
   static propTypes = {
     sheet: PropTypes.object.isRequired,
     intl: intlShape.isRequired,

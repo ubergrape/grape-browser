@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PureComponent, PropTypes} from 'react'
 import get from 'lodash/object/get'
 import isEmpty from 'lodash/lang/isEmpty'
-
 import injectSheet from 'grape-web/lib/jss'
+
 import Preview from './Preview'
 import Empty from './DetailEmpty'
 import Actions from './Actions'
@@ -15,7 +15,7 @@ import {listTypes} from '../constants'
  * Detail view for objects.
  */
 @injectSheet(style)
-export default class Detail extends Component {
+export default class Detail extends PureComponent {
   static propTypes = {
     sheet: PropTypes.object.isRequired,
     data: PropTypes.object,
@@ -52,14 +52,17 @@ export default class Detail extends Component {
   }
 
   renderInfo() {
-    const {classes} = this.props.sheet
-    const {service, title, subtitle, description} = this.props.data
+    const {
+      sheet: {classes},
+      data: {title, subtitle, description},
+      icon
+    } = this.props
 
     if (!title && !subtitle && !description) return null
 
     return (
       <div className={classes.article}>
-        <ServiceIcon service={service} theme={{classes}} />
+        <ServiceIcon icon={icon} theme={{classes}} />
         <div className={classes.articleBody}>
           {title && <h2 className={classes.title}>{title}</h2>}
           {subtitle && <h3 className={classes.subtitle}>{subtitle}</h3>}

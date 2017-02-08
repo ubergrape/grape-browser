@@ -1,26 +1,35 @@
-import React, {Component, PropTypes} from 'react'
+import React, {PureComponent, PropTypes} from 'react'
 import * as icons from 'grape-web/lib/svg-icons/data'
 import injectSheet from 'grape-web/lib/jss'
 
-import * as style from './style'
+import {styles} from './theme'
 
-@injectSheet(style)
-export default class ServiceIcon extends Component {
+@injectSheet(styles)
+export default class ServiceIcon extends PureComponent {
   static propTypes = {
     sheet: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,
-    service: PropTypes.string
+    icon: PropTypes.shape({
+      type: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired
+    }).isRequired
   }
 
   static defaultProps = {
-    service: 'file',
+    icon: {
+      type: 'id',
+      value: 'file'
+    },
     theme: {}
   }
 
   render() {
-    const classes = this.props.theme.classes || this.props.sheet.classes
-    const {service} = this.props
-    const iconUrl = icons[service] || icons.file
+    const {sheet, theme, icon: {type, value}} = this.props
+    const classes = theme.classes || sheet.classes
+
+    // If `icon.type` is "url", use it.
+    // If `icon.type` is an "id", look for an icon from the set or use a default icon.
+    const iconUrl = type === 'url' ? value : (icons[value] || icons.file)
     const backgroundImage = `url(${iconUrl})`
 
     return (

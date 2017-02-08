@@ -1,9 +1,9 @@
-import React, {Component, PropTypes, createElement} from 'react'
+import React, {PureComponent, PropTypes, createElement} from 'react'
 import noop from 'lodash/utility/noop'
 import moment from 'moment'
-
 import injectSheet from 'grape-web/lib/jss'
 import findMatches from 'grape-web/lib/search/findMatches'
+
 import * as style from './style'
 import * as utils from './utils'
 import ServiceIcon from '../service-icon/ServiceIcon'
@@ -12,7 +12,7 @@ import ServiceIcon from '../service-icon/ServiceIcon'
  * One result.
  */
 @injectSheet(style.rules)
-export default class Result extends Component {
+export default class Result extends PureComponent {
   static propTypes = {
     sheet: PropTypes.object,
     isFocused: PropTypes.bool,
@@ -34,7 +34,7 @@ export default class Result extends Component {
     onSelect: noop
   }
 
-  onClick() {
+  onClick = () => {
     if (this.props.isFocused) this.props.onSelect()
     else this.props.onFocus()
   }
@@ -77,7 +77,7 @@ export default class Result extends Component {
 
   render() {
     const {classes} = this.props.sheet
-    const {isFocused, service, info} = this.props
+    const {isFocused, icon, info} = this.props
     let containerClassName = isFocused ? classes.containerFocused : classes.container
     if (!this.props.isViewFocused && isFocused) {
       containerClassName = classes.containerFocusedInactive
@@ -85,10 +85,10 @@ export default class Result extends Component {
 
     return (
       <div
-        onClick={::this.onClick}
+        onClick={this.onClick}
         className={containerClassName}>
         <div className={classes.iconContainer}>
-          <ServiceIcon service={service} />
+          <ServiceIcon icon={icon} />
         </div>
         <div className={classes.nameContainer}>
           <div className={classes.name}>
