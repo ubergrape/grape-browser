@@ -33,8 +33,7 @@ export default class HighlightedInput extends Component {
     disabled: PropTypes.bool,
     theme: PropTypes.object,
     value: PropTypes.string,
-    tokens: PropTypes.arrayOf(PropTypes.string),
-    caretPosition: PropTypes.oneOf(['start', 'end'])
+    tokens: PropTypes.arrayOf(PropTypes.string)
   }
 
   static defaultProps = {
@@ -61,7 +60,7 @@ export default class HighlightedInput extends Component {
   }
 
   componentDidMount() {
-    this.editable = findDOMNode(this.refs.editable)
+    this.editable = findDOMNode(this.editableNode)
     this.ensureContainerSize()
     this.props.onDidMount(this)
   }
@@ -107,7 +106,7 @@ export default class HighlightedInput extends Component {
    * Scroll highlighter in parallel with editable.
    */
   onScroll = ({target}) => {
-    const {highlighter} = this.refs
+    const {highlighter} = this
     highlighter.scrollTop = target.scrollTop
     highlighter.scrollLeft = target.scrollLeft
   }
@@ -119,6 +118,7 @@ export default class HighlightedInput extends Component {
     const {value, caretAt} = this.state
     const word = getTouchedWord(value, caretAt)
     if (word) return word.value
+    return null
   }
 
   /**
@@ -199,8 +199,8 @@ export default class HighlightedInput extends Component {
   }
 
   ensureContainerSize() {
-    const highlighterHeight = this.refs.highlighter.offsetHeight
-    const {container} = this.refs
+    const highlighterHeight = this.highlighter.offsetHeight
+    const {container} = this
     const containerHeight = container.offsetHeight
 
     if (containerHeight !== highlighterHeight) {
@@ -213,14 +213,13 @@ export default class HighlightedInput extends Component {
     const {classes} = this.props.sheet
     const {tokens, getTokenClass, theme} = this.props
     const {value} = this.state
-
     const content = splitByTokens(value, tokens).map((part, index) => {
       const isToken = tokens.indexOf(part) >= 0
       if (isToken) {
         // Render the highlighted token.
         return (
           <span
-            key={index}
+            key={index} // eslint-disable-line react/no-array-index-key
             className={`${classes.token} ${theme.token} ${getTokenClass(part) || ''}`}
           >
             {part}
@@ -232,10 +231,8 @@ export default class HighlightedInput extends Component {
       // Used dangerouslySetInnerHTML to workaround a bug in IE11:
       // https://github.com/ubergrape/chatgrape/issues/3279
       return (
-        <span
-          key={index}
-          dangerouslySetInnerHTML={{__html: escape(part)}}
-        />
+        // eslint-disable-next-line react/no-array-index-key
+        <span key={index}>{escape(part)}</span>
       )
     })
 
@@ -247,26 +244,32 @@ export default class HighlightedInput extends Component {
   }
 
   render() {
-    const {Editable, theme, sheet: {classes}} = this.props
+    const {Editable, disabled, theme, sheet: {classes}} = this.props
 
     const editableProps = pick(this.props, 'onSubmit', 'onChange', 'onFocus',
       'onBlur', 'onKeyPress', 'placeholder', 'disabled')
 
     return (
       <div
-        ref="container"
+        ref={(container) => {
+          this.container = container
+        }}
         className={`${classes.container} ${theme.container}`}
         data-test="highlighted-editable"
       >
         <div
-          ref="highlighter"
+          ref={(highlighter) => {
+            this.highlighter = highlighter
+          }}
           className={`${classes.highlighter} ${theme.highlighter}`}
         >
           {this.renderHighlighterContent()}
         </div>
         <AccentMode
           onChange={this.onChangeAccentMode}
-          ref="editable"
+          ref={(editableNode) => {
+            this.editableNode = editableNode
+          }}
         >
           <Editable
             {...editableProps}
@@ -276,7 +279,8 @@ export default class HighlightedInput extends Component {
             onChange={this.onChange}
             onScroll={this.onScroll}
             value={this.state.value}
-            className={`${classes.editable} ${theme.editable}`}
+            className={`${classes.editable} ${theme.editable}
+            ${disabled ? classes.disabled : ''}`}
           />
         </AccentMode>
       </div>

@@ -7,8 +7,7 @@ export default class Textarea extends Component {
   static propTypes = {
     onKeyDown: PropTypes.func,
     onChange: PropTypes.func,
-    onSubmit: PropTypes.func,
-    className: PropTypes.string
+    onSubmit: PropTypes.func
   }
 
   static defaultProps = {
@@ -21,7 +20,6 @@ export default class Textarea extends Component {
 
   onKeyDown(e) {
     const isEnter = keyname(e.keyCode) === 'enter'
-
     if (isEnter) {
       // Always insert a new line to be consistent across browsers.
       if (e.altKey || e.ctrlKey || e.shiftKey) {
@@ -32,7 +30,7 @@ export default class Textarea extends Component {
       }
 
       // Do nothing if user tries to submit an empty text.
-      if (!this.refs.textarea.value.trim()) {
+      if (!this.textarea.value.trim()) {
         e.preventDefault()
         return
       }
@@ -46,13 +44,9 @@ export default class Textarea extends Component {
   }
 
   insertLineBreak() {
-    const {textarea} = this.refs
+    const {textarea} = this
     const {selectionStart, selectionEnd, value} = textarea
-
-    textarea.value =
-      value.substr(0, selectionStart) +
-      '\n' +
-      value.substr(selectionEnd)
+    textarea.value = `${value.substr(0, selectionStart)}\n${value.substr(selectionEnd)}`
 
     textarea.selectionEnd = selectionStart + 1
   }
@@ -61,8 +55,11 @@ export default class Textarea extends Component {
     return (
       <textarea
         {...this.props}
-        ref="textarea"
-        onKeyDown={::this.onKeyDown}></textarea>
+        ref={(textarea) => {
+          this.textarea = textarea
+        }}
+        onKeyDown={e => this.onKeyDown(e)}
+      />
     )
   }
 }

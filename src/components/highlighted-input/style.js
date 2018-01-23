@@ -1,4 +1,5 @@
 import fonts from 'grape-theme/dist/fonts'
+import {grayDarker} from 'grape-theme/dist/base-colors'
 
 export default {
   container: {
@@ -36,5 +37,8 @@ export default {
     background: 'transparent',
     textRendering: 'auto',
     wordBreak: 'break-word'
+  },
+  disabled: {
+    color: grayDarker
   }
 }
