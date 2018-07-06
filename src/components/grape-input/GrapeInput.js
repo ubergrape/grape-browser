@@ -12,7 +12,7 @@ import style from './grapeInputStyle'
 import parseQuery from '../query/parse'
 import HighlightedInput from '../highlighted-input/HighlightedInput'
 
-import { toMarkdown, fromMarkdown, getEmojiObjects } from './utils'
+import { toMarkdown, fromMarkdown } from './utils'
 
 @injectSheet(style)
 export default class GrapeInput extends Component {
@@ -123,8 +123,7 @@ export default class GrapeInput extends Component {
   }
 
   onChange = ({ value }) => {
-    const emojiObjects = getEmojiObjects(value)
-    const objects = { ...this.state.objects, ...emojiObjects }
+    const objects = { ...this.state.objects }
     const content = toMarkdown(this.input.splitByTokens(), objects)
 
     this.setState({ value, objects, content }, () => {
