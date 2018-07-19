@@ -1,5 +1,5 @@
-import parse from '../parse'
 import expect from 'expect.js'
+import parse from '../parse'
 
 describe('query', () => {
   describe('.parse()', () => {

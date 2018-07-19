@@ -1,5 +1,5 @@
-import stringify from '../stringify'
 import expect from 'expect.js'
+import stringify from '../stringify'
 
 describe('query', () => {
   describe('.stringify()', () => {

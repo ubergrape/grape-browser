@@ -1,6 +1,6 @@
-import { $, render } from '../../../test'
 import expect from 'expect.js'
 import React from 'react'
+import { $, render } from '../../../test'
 import GrapeInput from '../GrapeInput'
 
 describe('grape-input:', () => {
