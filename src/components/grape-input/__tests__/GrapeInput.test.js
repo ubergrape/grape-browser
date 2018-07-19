@@ -12,21 +12,13 @@ describe('grape-input:', () => {
 
   describe('GrapeInput set content', () => {
     it('should parse markdown content', done => {
-      let resized = false
-
       function onDidMount(component) {
-        expect(resized).toBe(true)
         expect(component.state.value).toBe('@room')
         done()
       }
 
-      function onResize() {
-        resized = true
-      }
-
       const grapeInput = (
         <GrapeInput
-          onResize={onResize}
           onDidMount={onDidMount}
           content="[room](cg://chatgrape|room|1|/chat/slug)"
           focused
