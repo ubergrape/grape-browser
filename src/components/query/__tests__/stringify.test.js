@@ -1,11 +1,10 @@
-import expect from 'expect.js'
 import stringify from '../stringify'
 
 describe('query', () => {
   describe('.stringify()', () => {
     it('should stringify with trigger only', () => {
       const str = stringify({ trigger: '#' })
-      expect(str).to.be('#')
+      expect(str).toBe('#')
     })
 
     it('should stringify with a search', () => {
@@ -13,7 +12,7 @@ describe('query', () => {
         trigger: '#',
         search: 'something',
       })
-      expect(str).to.be('#something')
+      expect(str).toBe('#something')
     })
   })
 })

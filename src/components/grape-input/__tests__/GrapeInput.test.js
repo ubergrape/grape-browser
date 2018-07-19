@@ -1,4 +1,3 @@
-import expect from 'expect.js'
 import React from 'react'
 import { $, render } from '../../../test'
 import GrapeInput from '../GrapeInput'
@@ -7,7 +6,7 @@ describe('grape-input:', () => {
   describe('GrapeInput()', () => {
     it('should render without props', () => {
       render(<GrapeInput />)
-      expect($('highlighted-editable')).to.be.an(Element)
+      expect($('highlighted-editable')).toBeInstanceOf(Element)
     })
   })
 
@@ -16,8 +15,8 @@ describe('grape-input:', () => {
       let resized = false
 
       function onDidMount(component) {
-        expect(resized).to.be(true)
-        expect(component.state.value).to.be('@room')
+        expect(resized).toBe(true)
+        expect(component.state.value).toBe('@room')
         done()
       }
 

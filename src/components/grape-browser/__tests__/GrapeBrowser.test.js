@@ -1,4 +1,3 @@
-import expect from 'expect.js'
 import React from 'react'
 // import times from 'lodash/utility/times'
 import { Simulate } from 'react-dom/test-utils'
@@ -13,7 +12,7 @@ describe('app:', () => {
   describe('GrapeBrowser()', () => {
     it('should render without props', () => {
       render(<GrapeBrowser />)
-      expect($('grape-browser')).to.be.an(Element)
+      expect($('grape-browser')).toBeInstanceOf(Element)
     })
   })
 
@@ -25,7 +24,7 @@ describe('app:', () => {
         </IntlProvider>
       )
       render(input)
-      expect($('search-browser', document.body)).to.be.an(Element)
+      expect($('search-browser', document.body)).toBeInstanceOf(Element)
     })
   })
 
@@ -51,7 +50,7 @@ describe('app:', () => {
         const node = $('search-browser editable', document.body)
         node.value = 'asdef'
         Simulate.change(node)
-        expect($('search-browser empty', document.body)).to.be.an(Element)
+        expect($('search-browser empty', document.body)).toBeInstanceOf(Element)
         done()
       })
     })
@@ -61,7 +60,7 @@ describe('app:', () => {
         component.query.set('search', 'something else', { silent: true })
         create(undefined, () => {
           const browser = $('search-browser', document.body)
-          expect(browser).to.be.an(Element)
+          expect(browser).toBeInstanceOf(Element)
           done()
         })
       })
@@ -76,7 +75,7 @@ describe('app:', () => {
         </IntlProvider>
       )
       render(input)
-      expect($('grape-browser datalist', document.body)).to.be.an(Element)
+      expect($('grape-browser datalist', document.body)).toBeInstanceOf(Element)
     })
   })
 
@@ -91,7 +90,7 @@ describe('app:', () => {
       const node = $('grape-browser editable', document.body)
       node.value = '@ '
       Simulate.change(node)
-      expect($('grape-browser datalist', document.body)).to.be(null)
+      expect($('grape-browser datalist', document.body)).toBe(null)
     })
   })
 
