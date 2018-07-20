@@ -1,32 +1,34 @@
 import React from 'react'
+import renderer from 'react-test-renderer'
 // import times from 'lodash/utility/times'
 // import { Simulate } from 'react-dom/test-utils'
-// import { IntlProvider } from 'react-intl'
+import { IntlProvider } from 'react-intl'
 
-import { $, render } from '../../../test'
+// import { $, render } from '../../../test'
 import GrapeBrowser from '../GrapeBrowser'
-// import data0 from './mocks/data0.json'
+import data0 from './mocks/data0.json'
 // import data1 from './mocks/data1.json'
 
 describe('app:', () => {
   describe('GrapeBrowser()', () => {
     it('should render without props', () => {
-      render(<GrapeBrowser />)
-      expect($('grape-browser')).toBeInstanceOf(Element)
+      const tree = renderer.create(<GrapeBrowser />).toJSON()
+      expect(tree).toMatchSnapshot()
     })
   })
 
-  // describe('GrapeBrowser() with search', () => {
-  //   it('should open search browser', () => {
-  //     const input = (
-  //       <IntlProvider locale="en" messages={{}}>
-  //         <GrapeBrowser browser="search" data={data0} focused setTrigger />
-  //       </IntlProvider>
-  //     )
-  //     render(input)
-  //     expect($('search-browser', document.body)).toBeInstanceOf(Element)
-  //   })
-  // })
+  describe('GrapeBrowser() with search', () => {
+    it('should open search browser', () => {
+      const tree = renderer
+        .create(
+          <IntlProvider locale="en" messages={{}}>
+            <GrapeBrowser browser="search" data={data0} focused setTrigger />
+          </IntlProvider>,
+        )
+        .toJSON()
+      expect(tree).toMatchSnapshot()
+    })
+  })
 
   // describe('GrapeBrowser() auto close', () => {
   //   function create(onDidMount, onRender) {
