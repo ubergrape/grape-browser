@@ -1,45 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`app: GrapeBrowser() should render without props 1`] = `
-<div
-  className="GrapeBrowser-grapeBrowser-0-1-1"
-  data-test="grape-browser"
->
+<div>
   <div
-    className="GrapeBrowser-scroll-0-1-2"
+    class="GrapeBrowser-grapeBrowser-0-1-1"
+    data-reactroot=""
+    data-test="grape-browser"
   >
-    <div>
-      <div
-        className="HighlightedInput-container-0-1-13 GrapeInput-container-0-1-5"
-        data-test="highlighted-editable"
-      >
+    <div
+      class="GrapeBrowser-scroll-0-1-2"
+    >
+      <div>
         <div
-          className="HighlightedInput-highlighter-0-1-14 GrapeInput-highlighter-0-1-6"
+          class="HighlightedInput-container-0-1-13 GrapeInput-container-0-1-5"
+          data-test="highlighted-editable"
         >
-          <span
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": "",
-              }
-            }
+          <div
+            class="HighlightedInput-highlighter-0-1-14 GrapeInput-highlighter-0-1-6"
+          >
+            <span />
+            <!-- react-text: 7 -->
+             
+            <!-- /react-text -->
+          </div>
+          <textarea
+            class="HighlightedInput-editable-0-1-16 GrapeInput-editable-0-1-7 GrapeInput-highlighter-0-1-6"
+            data-test="editable"
+            placeholder=""
           />
-           
         </div>
-        <textarea
-          autoFocus={true}
-          className="HighlightedInput-editable-0-1-16 GrapeInput-editable-0-1-7 GrapeInput-highlighter-0-1-6"
-          data-test="editable"
-          disabled={false}
-          onBlur={[Function]}
-          onChange={[Function]}
-          onClick={[Function]}
-          onFocus={[Function]}
-          onKeyDown={[Function]}
-          onScroll={[Function]}
-          onSubmit={[Function]}
-          placeholder=""
-          value=""
-        />
+        <!-- react-empty: 9 -->
       </div>
     </div>
   </div>

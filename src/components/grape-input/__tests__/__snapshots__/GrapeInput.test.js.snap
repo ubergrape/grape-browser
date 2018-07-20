@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`grape-input: GrapeInput set content should parse markdown content 1`] = `
+<div>
+  <div
+    data-reactroot=""
+  >
+    <div
+      class="HighlightedInput-container-0-1-10 GrapeInput-container-0-1-1"
+      data-test="highlighted-editable"
+    >
+      <div
+        class="HighlightedInput-highlighter-0-1-11 GrapeInput-highlighter-0-1-2"
+      >
+        <span
+          class="HighlightedInput-token-0-1-12 GrapeInput-token-0-1-4 GrapeInput-room-0-1-5"
+        >
+          @room
+        </span>
+        <!-- react-text: 5 -->
+         
+        <!-- /react-text -->
+      </div>
+      <textarea
+        class="HighlightedInput-editable-0-1-13 GrapeInput-editable-0-1-3 GrapeInput-highlighter-0-1-2"
+        data-test="editable"
+        placeholder=""
+      >
+        @room
+      </textarea>
+    </div>
+    <!-- react-empty: 7 -->
+  </div>
+</div>
+`;
+
+exports[`grape-input: GrapeInput() should render without props 1`] = `
+<div>
+  <div
+    data-reactroot=""
+  >
+    <div
+      class="HighlightedInput-container-0-1-10 GrapeInput-container-0-1-1"
+      data-test="highlighted-editable"
+    >
+      <div
+        class="HighlightedInput-highlighter-0-1-11 GrapeInput-highlighter-0-1-2"
+      >
+        <span />
+        <!-- react-text: 5 -->
+         
+        <!-- /react-text -->
+      </div>
+      <textarea
+        class="HighlightedInput-editable-0-1-13 GrapeInput-editable-0-1-3 GrapeInput-highlighter-0-1-2"
+        data-test="editable"
+        placeholder=""
+      />
+    </div>
+    <!-- react-empty: 7 -->
+  </div>
+</div>
+`;

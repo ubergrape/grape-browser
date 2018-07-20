@@ -1,12 +1,14 @@
 import React from 'react'
-import { $, render } from '../../../test'
+import { render, cleanup } from 'react-testing-library'
 import GrapeInput from '../GrapeInput'
+
+afterEach(cleanup)
 
 describe('grape-input:', () => {
   describe('GrapeInput()', () => {
     it('should render without props', () => {
-      render(<GrapeInput />)
-      expect($('highlighted-editable')).toBeInstanceOf(Element)
+      const { container } = render(<GrapeInput />)
+      expect(container).toMatchSnapshot()
     })
   })
 
@@ -17,14 +19,14 @@ describe('grape-input:', () => {
         done()
       }
 
-      const grapeInput = (
+      const { container } = render(
         <GrapeInput
           onDidMount={onDidMount}
           content="[room](cg://chatgrape|room|1|/chat/slug)"
           focused
-        />
+        />,
       )
-      render(grapeInput)
+      expect(container).toMatchSnapshot()
     })
   })
 })
