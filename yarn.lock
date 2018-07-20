@@ -6749,6 +6749,13 @@ react-styleguidist@^5.0.6:
     webpack-merge "^4.1.0"
     webpage "^0.3.0"
 
+react-test-renderer@^15.5.4:
+  version "15.6.2"
+  resolved "https://registry.npmjs.org/react-test-renderer/-/react-test-renderer-15.6.2.tgz#d0333434fc2c438092696ca770da5ed48037efa8"
+  dependencies:
+    fbjs "^0.8.9"
+    object-assign "^4.1.0"
+
 react-transition-group@^2.2.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-2.3.1.tgz#31d611b33e143a5e0f2d94c348e026a0f3b474b6"
