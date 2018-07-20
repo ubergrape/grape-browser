@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import noop from 'lodash/utility/noop'
 import escape from 'lodash/string/escape'
 import pick from 'lodash/object/pick'
@@ -19,8 +18,7 @@ import {
 } from './utils'
 import style from './style'
 
-@injectSheet(style)
-export default class HighlightedInput extends Component {
+class HighlightedInput extends Component {
   static propTypes = {
     onDidMount: PropTypes.func,
     onChange: PropTypes.func,
@@ -61,7 +59,7 @@ export default class HighlightedInput extends Component {
   }
 
   componentDidMount() {
-    this.editable = findDOMNode(this.refs.editable)
+    this.editable = this.editableRef
     this.ensureContainerSize()
     this.props.onDidMount(this)
   }
@@ -107,9 +105,8 @@ export default class HighlightedInput extends Component {
    * Scroll highlighter in parallel with editable.
    */
   onScroll = ({ target }) => {
-    const { highlighter } = this.refs
-    highlighter.scrollTop = target.scrollTop
-    highlighter.scrollLeft = target.scrollLeft
+    this.highlighterRef.scrollTop = target.scrollTop
+    this.highlighterRef.scrollLeft = target.scrollLeft
   }
 
   /**
@@ -118,49 +115,31 @@ export default class HighlightedInput extends Component {
   getTouchedWord() {
     const { value, caretAt } = this.state
     const word = getTouchedWord(value, caretAt)
-    if (word) return word.value
+    return word ? word.value : ''
+  }
+
+  setContainerRef = ref => {
+    this.containerRef = ref
+  }
+
+  setEditableRef = ref => {
+    this.editableRef = ref
+  }
+
+  setHighlighterRef = ref => {
+    this.highlighterRef = ref
+  }
+
+  ensureCaretPosition() {
+    if (!this.props.focused || this.isAccentMode) return
+    setCaretPosition(this.state.caretAt, this.editable)
   }
 
   /**
-   * Insert a string at the caret position.
-   * Ensure space before the string.
+   * Split the value into an array of words and tokens as they appear in text.
    */
-  insert(str) {
-    let { value, selectionEnd: caretAt } = this.editable
-    let valueBefore = value.slice(0, caretAt)
-    valueBefore = ensureSpace('after', valueBefore)
-
-    let valueAfter = value.slice(caretAt, value.length)
-    if (valueAfter) valueAfter = ensureSpace('before', valueAfter)
-    value = valueBefore + str + valueAfter
-    caretAt = (valueBefore + str).length
-
-    this.setState({ value, caretAt }, () => {
-      scrollLeftToCaret(this.editable)
-    })
-  }
-
-  /**
-   * Replace a word near the caret by a string.
-   * Ensure space after the string.
-   */
-  replace(str) {
-    let { value, selectionEnd: caretAt } = this.editable
-
-    const word = getTouchedWord(value, caretAt)
-
-    if (!word) return
-
-    const valueBefore = value.slice(0, word.position[0])
-    let valueAfter = value.slice(word.position[1], value.length)
-    valueAfter = ensureSpace('before', valueAfter)
-
-    value = valueBefore + str + valueAfter
-    caretAt = (valueBefore + str).length + 1
-
-    this.setState({ value, caretAt }, () => {
-      scrollLeftToCaret(this.editable)
-    })
+  splitByTokens() {
+    return splitByTokens(this.state.value, this.props.tokens)
   }
 
   /**
@@ -191,24 +170,56 @@ export default class HighlightedInput extends Component {
   }
 
   /**
-   * Split the value into an array of words and tokens as they appear in text.
+   * Replace a word near the caret by a string.
+   * Ensure space after the string.
    */
-  splitByTokens() {
-    return splitByTokens(this.state.value, this.props.tokens)
+  replace(str) {
+    let { value, selectionEnd: caretAt } = this.editable
+
+    const word = getTouchedWord(value, caretAt)
+
+    if (!word) return
+
+    const valueBefore = value.slice(0, word.position[0])
+    let valueAfter = value.slice(word.position[1], value.length)
+    valueAfter = ensureSpace('before', valueAfter)
+
+    value = valueBefore + str + valueAfter
+    caretAt = (valueBefore + str).length + 1
+
+    this.setState({ value, caretAt }, () => {
+      scrollLeftToCaret(this.editable)
+    })
   }
 
-  ensureCaretPosition() {
-    if (!this.props.focused || this.isAccentMode) return
-    setCaretPosition(this.state.caretAt, this.editable)
+  /**
+   * Insert a string at the caret position.
+   * Ensure space before the string.
+   */
+  insert(str) {
+    let { value, selectionEnd: caretAt } = this.editable
+    let valueBefore = value.slice(0, caretAt)
+    valueBefore = ensureSpace('after', valueBefore)
+
+    let valueAfter = value.slice(caretAt, value.length)
+    if (valueAfter) valueAfter = ensureSpace('before', valueAfter)
+    value = valueBefore + str + valueAfter
+    caretAt = (valueBefore + str).length
+
+    this.setState({ value, caretAt }, () => {
+      scrollLeftToCaret(this.editable)
+    })
   }
 
   ensureContainerSize() {
-    const highlighterHeight = this.refs.highlighter.offsetHeight
-    const { container } = this.refs
-    const containerHeight = container.offsetHeight
+    const { containerRef, highlighterRef } = this
 
-    if (containerHeight !== highlighterHeight) {
-      container.style.height = `${highlighterHeight}px`
+    if (
+      containerRef &&
+      highlighterRef &&
+      containerRef.offsetHeight !== highlighterRef.offsetHeight
+    ) {
+      this.containerRef.style.height = `${highlighterRef.offsetHeight}px`
       this.props.onResize()
     }
   }
@@ -224,7 +235,7 @@ export default class HighlightedInput extends Component {
         // Render the highlighted token.
         return (
           <span
-            key={index}
+            key={index} // eslint-disable-line react/no-array-index-key
             className={`${classes.token} ${theme.token} ${getTokenClass(part) ||
               ''}`}
           >
@@ -237,7 +248,10 @@ export default class HighlightedInput extends Component {
       // Used dangerouslySetInnerHTML to workaround a bug in IE11:
       // https://github.com/ubergrape/chatgrape/issues/3279
       return (
-        <span key={index} dangerouslySetInnerHTML={{ __html: escape(part) }} />
+        <span
+          key={index} // eslint-disable-line react/no-array-index-key
+          dangerouslySetInnerHTML={{ __html: escape(part) }} // eslint-disable-line react/no-danger
+        />
       )
     })
 
@@ -268,17 +282,20 @@ export default class HighlightedInput extends Component {
 
     return (
       <div
-        ref="container"
+        ref={this.setContainerRef}
         className={`${classes.container} ${theme.container}`}
         data-test="highlighted-editable"
       >
         <div
-          ref="highlighter"
+          ref={this.setHighlighterRef}
           className={`${classes.highlighter} ${theme.highlighter}`}
         >
           {this.renderHighlighterContent()}
         </div>
-        <AccentMode onChange={this.onChangeAccentMode} ref="editable">
+        <AccentMode
+          onChange={this.onChangeAccentMode}
+          ref={this.setEditableRef}
+        >
           <Editable
             {...editableProps}
             autoFocus
@@ -294,3 +311,5 @@ export default class HighlightedInput extends Component {
     )
   }
 }
+
+export default injectSheet(style)(HighlightedInput)
