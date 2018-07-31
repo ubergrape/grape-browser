@@ -35,8 +35,7 @@ const browserWithInput = {
 /**
  * Uses all types of auto completes to provide end component.
  */
-@injectSheet(style)
-export default class GrapeBrowser extends Component {
+class GrapeBrowser extends Component {
   static propTypes = {
     isLoading: PropTypes.bool,
     placeholder: PropTypes.string,
@@ -480,3 +479,5 @@ export default class GrapeBrowser extends Component {
     )
   }
 }
+
+export default injectSheet(style)(GrapeBrowser)

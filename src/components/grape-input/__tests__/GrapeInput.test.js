@@ -1,39 +1,32 @@
-import { $, render } from '../../../test'
-import expect from 'expect.js'
 import React from 'react'
+import { render, cleanup } from 'react-testing-library'
 import GrapeInput from '../GrapeInput'
+
+afterEach(cleanup)
 
 describe('grape-input:', () => {
   describe('GrapeInput()', () => {
     it('should render without props', () => {
-      render(<GrapeInput />)
-      expect($('highlighted-editable')).to.be.an(Element)
+      const { container } = render(<GrapeInput />)
+      expect(container).toMatchSnapshot()
     })
   })
 
   describe('GrapeInput set content', () => {
     it('should parse markdown content', done => {
-      let resized = false
-
       function onDidMount(component) {
-        expect(resized).to.be(true)
-        expect(component.state.value).to.be('@room')
+        expect(component.state.value).toBe('@room')
         done()
       }
 
-      function onResize() {
-        resized = true
-      }
-
-      const grapeInput = (
+      const { container } = render(
         <GrapeInput
-          onResize={onResize}
           onDidMount={onDidMount}
           content="[room](cg://chatgrape|room|1|/chat/slug)"
           focused
-        />
+        />,
       )
-      render(grapeInput)
+      expect(container).toMatchSnapshot()
     })
   })
 })

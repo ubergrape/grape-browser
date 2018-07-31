@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app: GrapeBrowser() should render without props 1`] = `
+<div>
+  <div
+    class="GrapeBrowser-grapeBrowser-0-1-1"
+    data-reactroot=""
+    data-test="grape-browser"
+  >
+    <div
+      class="GrapeBrowser-scroll-0-1-2"
+    >
+      <div>
+        <div
+          class="HighlightedInput-container-0-1-13 GrapeInput-container-0-1-5"
+          data-test="highlighted-editable"
+        >
+          <div
+            class="HighlightedInput-highlighter-0-1-14 GrapeInput-highlighter-0-1-6"
+          >
+            <span />
+            <!-- react-text: 7 -->
+             
+            <!-- /react-text -->
+          </div>
+          <textarea
+            class="HighlightedInput-editable-0-1-16 GrapeInput-editable-0-1-7 GrapeInput-highlighter-0-1-6"
+            data-test="editable"
+            placeholder=""
+          />
+        </div>
+        <!-- react-empty: 9 -->
+      </div>
+    </div>
+  </div>
+</div>
+`;
