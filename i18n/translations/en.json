@@ -19,6 +19,6 @@
   "serviesHeadline": "select service",
   "_serviesHeadline.comment": "**Headline in services list of grape-browser**",
   "noServicesFound": "No services found.",
-  "enterMessagePlaceholder": "Enter a message …",
+  "enterMessagePlaceholder": "Enter a keyword …",
   "groupPostingLimitedPlaceholder": "Posting to this group has been limited."
 }
