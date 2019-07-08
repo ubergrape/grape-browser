@@ -14,7 +14,7 @@
     "emojione": "^1.4.0",
     "grape-js-emoji": "^3.4.0",
     "grape-theme": "^3.4.1",
-    "grape-web": "^1.8.0",
+    "grape-web": "^1.8.6",
     "images-loader": "^0.1.2",
     "keyname": "^0.1.0",
     "lodash": "^4.17.11",
@@ -73,7 +73,6 @@
     "node-libs-browser": "^0.5.2",
     "prettier": "^1.13.5",
     "raw-loader": "^0.5.1",
-    "react-styleguidist": "^9.0.4",
     "svgo": "^0.6.1",
     "webpack": "^4.28.4"
   },
