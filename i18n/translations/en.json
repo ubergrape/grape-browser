@@ -1,6 +1,5 @@
 {
   "noEmojiFound": "No emoji found.",
-  "enterKeywordPlaceholder": "Enter a keyword …",
   "groupPostingLimitedPlaceholder": "Posting to this group has been limited.",
   "willNotifyRoom": "— notify everyone in this group",
   "_willNotifyRoom.comment": "*Describe willNotifyRoom*: this string is decribing action",
@@ -15,7 +14,6 @@
   "_yourBusinessTools.comment": "*Describe yourBusinessTools*: link used in sentence 'Search Wikipedia, Youtube, Giphy and {tools}'",
   "resultsAmountHint": "{amount} results",
   "_resultsAmountHint.comment": "Amount of results hin in the grape-search header.",
-  "grapeSearch": "Grape Search",
   "noResults": "No Results.",
   "amountResults": "{resultsAmount} {resultsAmount, plural, one {Result} other {Results}}",
   "serviesHeadline": "select service",
